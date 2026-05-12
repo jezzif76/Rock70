@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ROCK 70s QUIZ</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Special+Elite&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --oro: #D4A017;
+    --naranja: #C0510A;
+    --crema: #F5EDDA;
+    --marron: #3B1F0A;
+    --rojo: #8B1A0A;
+    --verde: #2D5A1B;
+    --negro: #1A0D00;
+    --shadow: 4px 4px 0px var(--marron);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--negro);
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(212,160,23,0.06) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(212,160,23,0.06) 40px);
+    font-family: 'Special Elite', cursive;
+    color: var(--crema);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 40px 0;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    width: 100%;
+    background: linear-gradient(135deg, var(--marron) 0%, var(--negro) 50%, var(--marron) 100%);
+    border-bottom: 3px solid var(--oro);
+    padding: 18px 20px 12px;
+    text-align: center;
+    position: relative;
+  }
+  .header::before, .header::after {
+    content: '♪';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    color: var(--oro);
+    opacity: 0.5;
+  }
+  .header::before { left: 15px; }
+  .header::after { right: 15px; }
+
+  .title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(2.8rem, 10vw, 4.5rem);
+    color: var(--oro);
+    text-shadow: 3px 3px 0 var(--rojo), 6px 6px 0 var(--marron);
+    letter-spacing: 6px;
+    line-height: 1;
+  }
+  .subtitle {
+    font-family: 'Permanent Marker', cursive;
+    font-size: clamp(0.75rem, 3vw, 1rem);
+    color: var(--naranja);
+    letter-spacing: 2px;
+    margin-top: 4px;
+  }
+
+  /* SCORE BAR */
+  .scorebar {
+    width: 100%;
+    max-width: 480px;
+    padding: 12px 20px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .score-box {
+    background: var(--marron);
+    border: 2px solid var(--oro);
+    border-radius: 4px;
+    padding: 6px 14px;
+    text-align: center;
+    min-width: 80px;
+  }
+  .score-label {
+    font-size: 0.6rem;
+    color: var(--oro);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .score-val {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.8rem;
+    color: var(--crema);
+    line-height: 1;
+  }
+  .progress-wrap {
+    flex: 1;
+  }
+  .progress-label {
+    font-size: 0.6rem;
+    color: var(--oro);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .progress-track {
+    height: 18px;
+    background: var(--marron);
+    border: 2px solid var(--oro);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--rojo), var(--oro));
+    transition: width 0.5s ease;
+    position: relative;
+  }
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    right: 4px;
+    height: 4px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 2px;
+  }
+
+  /* MAIN CARD */
+  .card {
+    width: 100%;
+    max-width: 480px;
+    padding: 0 16px;
+  }
+
+  .question-box {
+    background: linear-gradient(160deg, #2A1205 0%, #1A0D00 100%);
+    border: 3px solid var(--oro);
+    border-radius: 6px;
+    padding: 20px 18px 16px;
+    margin-bottom: 16px;
+    position: relative;
+    box-shadow: 0 0 30px rgba(212,160,23,0.15);
+  }
+  .question-box::before {
+    content: '';
+    position: absolute;
+    top: 5px; left: 5px; right: 5px; bottom: 5px;
+    border: 1px solid rgba(212,160,23,0.2);
+    border-radius: 3px;
+    pointer-events: none;
+  }
+
+  .q-tag {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 0.8rem;
+    color: var(--naranja);
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .q-tag::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--naranja);
+    opacity: 0.4;
+  }
+
+  .question-text {
+    font-size: clamp(1rem, 4vw, 1.15rem);
+    line-height: 1.5;
+    color: var(--crema);
+    min-height: 60px;
+  }
+
+  /* ATTEMPTS indicator */
+  .attempts-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    align-items: center;
+  }
+  .attempt-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--oro);
+    background: transparent;
+    transition: background 0.3s;
+  }
+  .attempt-dot.used { background: var(--rojo); border-color: var(--rojo); }
+  .attempts-label {
+    font-size: 0.65rem;
+    color: var(--oro);
+    letter-spacing: 1px;
+    opacity: 0.8;
+  }
+
+  /* OPTIONS */
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .opt-btn {
+    background: linear-gradient(135deg, #2A1A08 0%, #1E1005 100%);
+    border: 2px solid rgba(212,160,23,0.4);
+    border-radius: 5px;
+    color: var(--crema);
+    font-family: 'Special Elite', cursive;
+    font-size: clamp(0.85rem, 3.5vw, 1rem);
+    padding: 13px 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.3;
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .opt-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(212,160,23,0.08), transparent);
+    transition: left 0.4s ease;
+  }
+  .opt-btn:hover:not(:disabled)::before { left: 100%; }
+  .opt-btn:hover:not(:disabled) {
+    border-color: var(--oro);
+    background: linear-gradient(135deg, #3B2410 0%, #2A180A 100%);
+    transform: translateX(3px);
+  }
+  .opt-btn:active:not(:disabled) { transform: scale(0.98); }
+
+  .opt-letter {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.1rem;
+    color: var(--oro);
+    min-width: 22px;
+    text-align: center;
+  }
+
+  .opt-btn.correct {
+    background: linear-gradient(135deg, #1B3A10 0%, #0F2408 100%) !important;
+    border-color: #4CAF50 !important;
+    color: #A8D5A2;
+    animation: correctPop 0.4s ease;
+  }
+  .opt-btn.correct .opt-letter { color: #4CAF50; }
+
+  .opt-btn.wrong {
+    background: linear-gradient(135deg, #3A0A0A 0%, #1A0505 100%) !important;
+    border-color: #8B2020 !important;
+    color: #D4A0A0;
+  }
+  .opt-btn.wrong .opt-letter { color: #C0392B; }
+
+  .opt-btn.reveal {
+    border-color: #4CAF50 !important;
+    background: linear-gradient(135deg, #1B3A10 0%, #0F2408 100%) !important;
+    color: #A8D5A2 !important;
+  }
+  .opt-btn.reveal .opt-letter { color: #4CAF50 !important; }
+
+  .opt-btn:disabled { cursor: default; opacity: 0.7; }
+  .opt-btn.correct, .opt-btn.reveal { opacity: 1 !important; }
+
+  @keyframes correctPop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.04); }
+    100% { transform: scale(1); }
+  }
+
+  /* FEEDBACK */
+  .feedback {
+    margin: 14px 0 0;
+    padding: 12px 16px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .feedback.show { display: block; }
+  .feedback.good {
+    background: rgba(76,175,80,0.12);
+    border: 1px solid #4CAF50;
+    color: #A8D5A2;
+  }
+  .feedback.bad {
+    background: rgba(192,81,10,0.12);
+    border: 1px solid var(--naranja);
+    color: #F5CDAA;
+  }
+  .feedback.neutral {
+    background: rgba(212,160,23,0.08);
+    border: 1px solid rgba(212,160,23,0.4);
+    color: var(--crema);
+  }
+  .pts-badge {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.4rem;
+    color: var(--oro);
+  }
+
+  /* NEXT BTN */
+  .next-btn {
+    width: 100%;
+    margin-top: 16px;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--rojo) 0%, var(--naranja) 100%);
+    border: none;
+    border-radius: 5px;
+    color: var(--crema);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.3rem;
+    letter-spacing: 4px;
+    cursor: pointer;
+    display: none;
+    box-shadow: 0 4px 0 var(--marron);
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .next-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--marron); }
+  .next-btn.show { display: block; animation: fadeIn 0.3s ease; }
+
+  /* START SCREEN */
+  #start-screen {
+    width: 100%;
+    max-width: 480px;
+    padding: 20px 16px;
+    text-align: center;
+  }
+  .vinyl {
+    width: 130px;
+    height: 130px;
+    margin: 10px auto 24px;
+    position: relative;
+  }
+  .vinyl-disc {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: conic-gradient(
+      #1a1a1a 0deg, #2a2a2a 5deg, #1a1a1a 10deg,
+      #2a2a2a 15deg, #1a1a1a 20deg, #2a2a2a 25deg,
+      #1a1a1a 30deg, #2a2a2a 35deg, #1a1a1a 40deg,
+      #2a2a2a 45deg, #1a1a1a 50deg, #2a2a2a 55deg,
+      #1a1a1a 60deg, #2a2a2a 65deg, #1a1a1a 70deg,
+      #2a2a2a 75deg, #1a1a1a 80deg, #2a2a2a 85deg,
+      #1a1a1a 90deg, #2a2a2a 95deg, #1a1a1a 100deg,
+      #2a2a2a 105deg, #1a1a1a 110deg, #2a2a2a 115deg,
+      #1a1a1a 120deg, #2a2a2a 125deg, #1a1a1a 130deg,
+      #2a2a2a 135deg, #1a1a1a 140deg, #2a2a2a 145deg,
+      #1a1a1a 150deg, #2a2a2a 155deg, #1a1a1a 160deg,
+      #2a2a2a 165deg, #1a1a1a 170deg, #2a2a2a 175deg,
+      #1a1a1a 180deg, #2a2a2a 185deg, #1a1a1a 190deg,
+      #2a2a2a 195deg, #1a1a1a 200deg, #2a2a2a 205deg,
+      #1a1a1a 210deg, #2a2a2a 215deg, #1a1a1a 220deg,
+      #2a2a2a 225deg, #1a1a1a 230deg, #2a2a2a 235deg,
+      #1a1a1a 240deg, #2a2a2a 245deg, #1a1a1a 250deg,
+      #2a2a2a 255deg, #1a1a1a 260deg, #2a2a2a 265deg,
+      #1a1a1a 270deg, #2a2a2a 275deg, #1a1a1a 280deg,
+      #2a2a2a 285deg, #1a1a1a 290deg, #2a2a2a 295deg,
+      #1a1a1a 300deg, #2a2a2a 305deg, #1a1a1a 310deg,
+      #2a2a2a 315deg, #1a1a1a 320deg, #2a2a2a 325deg,
+      #1a1a1a 330deg, #2a2a2a 335deg, #1a1a1a 340deg,
+      #2a2a2a 345deg, #1a1a1a 350deg, #2a2a2a 355deg, #1a1a1a 360deg
+    );
+    border: 4px solid #333;
+    box-shadow: 0 0 30px rgba(212,160,23,0.3), inset 0 0 20px rgba(0,0,0,0.5);
+    animation: spin 4s linear infinite;
+    position: relative;
+  }
+  .vinyl-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--naranja) 0%, var(--rojo) 70%, var(--marron) 100%);
+    border: 2px solid var(--oro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 0.55rem;
+    color: var(--crema);
+    letter-spacing: 1px;
+    text-align: center;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .start-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(1.5rem, 7vw, 2.2rem);
+    color: var(--crema);
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  .start-desc {
+    font-size: 0.9rem;
+    color: rgba(245,237,218,0.7);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    padding: 0 10px;
+  }
+
+  .rules-box {
+    background: rgba(212,160,23,0.06);
+    border: 1px solid rgba(212,160,23,0.3);
+    border-radius: 5px;
+    padding: 14px;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+  .rules-title {
+    font-family: 'Bebas Neue', cursive;
+    color: var(--oro);
+    letter-spacing: 3px;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  .rule {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: var(--crema);
+    margin-bottom: 7px;
+    line-height: 1.3;
+  }
+  .rule-icon { font-size: 1.1rem; min-width: 24px; text-align: center; }
+  .rule-pts {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1rem;
+    color: var(--oro);
+  }
+
+  .start-btn {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--rojo) 0%, #A03000 50%, var(--naranja) 100%);
+    border: 3px solid var(--oro);
+    border-radius: 6px;
+    color: var(--crema);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.6rem;
+    letter-spacing: 6px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 var(--marron), 0 0 20px rgba(192,81,10,0.4);
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .start-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--marron); }
+
+  /* WIN SCREEN */
+  #win-screen {
+    width: 100%;
+    max-width: 480px;
+    padding: 20px 16px;
+    text-align: center;
+    display: none;
+  }
+  .win-trophy {
+    font-size: 5rem;
+    margin: 20px 0 10px;
+    animation: bounce 1s ease infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  .win-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(2rem, 8vw, 3rem);
+    color: var(--oro);
+    text-shadow: 3px 3px 0 var(--rojo);
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+  }
+  .win-score {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(3rem, 12vw, 5rem);
+    color: var(--crema);
+    line-height: 1;
+    text-shadow: 4px 4px 0 var(--marron);
+  }
+  .win-label {
+    color: var(--oro);
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+  }
+  .win-msg {
+    font-size: 1rem;
+    color: rgba(245,237,218,0.8);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .play-again-btn {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--verde) 0%, #1A3A10 100%);
+    border: 3px solid #4CAF50;
+    border-radius: 6px;
+    color: var(--crema);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.4rem;
+    letter-spacing: 5px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #0A1F08;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .play-again-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #0A1F08; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hidden { display: none !important; }
+  .category-tag {
+    display: inline-block;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    font-family: 'Bebas Neue', cursive;
+  }
+  .cat-intl { background: rgba(192,81,10,0.25); border: 1px solid var(--naranja); color: var(--naranja); }
+  .cat-arg { background: rgba(45,90,27,0.3); border: 1px solid #6BAD4A; color: #6BAD4A; }
+  .cat-latam { background: rgba(100,60,180,0.2); border: 1px solid #9B7FD4; color: #C4AAFF; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="title">ROCK 70s</div>
+  <div class="subtitle">♫ EL GRAN QUIZ DEL ROCK SETENTOSO ♫</div>
+</div>
+
+<!-- START SCREEN -->
+<div id="start-screen">
+  <div class="vinyl">
+    <div class="vinyl-disc">
+      <div class="vinyl-label">ROCK<br>70s</div>
+    </div>
+  </div>
+  <div class="start-title">¿Cuánto sabés<br>del rock de los 70s?</div>
+  <div class="start-desc">Rock internacional, argentino y latinoamericano de la mejor década.</div>
+
+  <div class="rules-box">
+    <div class="rules-title">📋 REGLAS</div>
+    <div class="rule"><div class="rule-icon">🎯</div><div>Elegí la respuesta correcta. <span class="rule-pts">3 PTS</span> en el 1er intento</div></div>
+    <div class="rule"><div class="rule-icon">🔁</div><div>Si errás, tenés un 2do intento. <span class="rule-pts">1 PTO</span> si acertás ahí</div></div>
+    <div class="rule"><div class="rule-icon">❌</div><div>Después del 2do error: <span class="rule-pts">0 PTS</span> y se revela la respuesta</div></div>
+    <div class="rule"><div class="rule-icon">🏆</div><div>Llegá a <span class="rule-pts">50 PUNTOS</span> para ganar</div></div>
+    <div class="rule"><div class="rule-icon">🔀</div><div>Cada partida tiene preguntas diferentes y al azar</div></div>
+  </div>
+
+  <button class="start-btn" onclick="startGame()">¡ EMPEZAR !</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="game-screen" class="hidden">
+  <div class="scorebar">
+    <div class="score-box">
+      <div class="score-label">PUNTOS</div>
+      <div class="score-val" id="score-display">0</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label">META: 50 PTS</div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="score-box">
+      <div class="score-label">RONDA</div>
+      <div class="score-val" id="round-display">1</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="question-box">
+      <div id="cat-label" class="category-tag cat-intl">INTERNACIONAL</div>
+      <div class="q-tag">PREGUNTA <span id="q-num">1</span></div>
+      <div class="question-text" id="question-text">Cargando...</div>
+    </div>
+
+    <div class="attempts-row">
+      <div class="attempt-dot" id="dot1"></div>
+      <div class="attempt-dot" id="dot2"></div>
+      <div class="attempts-label">INTENTOS USADOS</div>
+    </div>
+
+    <div class="options-grid" id="options-grid"></div>
+
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">SIGUIENTE PREGUNTA ›</button>
+  </div>
+</div>
+
+<!-- WIN SCREEN -->
+<div id="win-screen">
+  <div class="win-trophy">🏆</div>
+  <div class="win-title">¡ LEYENDA DEL ROCK !</div>
+  <div class="win-score" id="final-score">0</div>
+  <div class="win-label">PUNTOS TOTALES</div>
+  <div class="win-msg" id="win-msg"></div>
+  <button class="play-again-btn" onclick="startGame()">♪ JUGAR DE NUEVO ♪</button>
+</div>
+
+<script>
+// ===========================
+// BASE DE PREGUNTAS
+// ===========================
+const ALL_QUESTIONS = [
+  // INTERNACIONALES
+  {
+    cat: "intl",
+    q: "¿Quién tocaba el tema 'Sultans of Swing' en 1978?",
+    opts: ["Led Zeppelin","The Eagles","Dire Straits","Deep Purple","Fleetwood Mac"],
+    a: "Dire Straits"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué banda lanzó el álbum 'Hotel California' en 1977?",
+    opts: ["The Rolling Stones","Supertramp","The Eagles","Aerosmith","Foreigner"],
+    a: "The Eagles"
+  },
+  {
+    cat: "intl",
+    q: "'Bohemian Rhapsody' fue un éxito de Billboard en 1975. ¿De qué banda es?",
+    opts: ["David Bowie","Elton John","Queen","10cc","Kansas"],
+    a: "Queen"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué grupo lanzó 'Stairway to Heaven' en 1971?",
+    opts: ["Black Sabbath","Deep Purple","Led Zeppelin","Yes","Jethro Tull"],
+    a: "Led Zeppelin"
+  },
+  {
+    cat: "intl",
+    q: "¿En qué canción Pink Floyd repite la frase 'We don't need no education'?",
+    opts: ["Comfortably Numb","Wish You Were Here","Brain Damage","Another Brick in the Wall","Hey You"],
+    a: "Another Brick in the Wall"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué artista lanzó 'Rocket Man' en 1972?",
+    opts: ["Cat Stevens","David Bowie","Rod Stewart","Elton John","Paul McCartney"],
+    a: "Elton John"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué banda tiene el tema 'Smoke on the Water' de 1972?",
+    opts: ["Uriah Heep","Deep Purple","Black Sabbath","Grand Funk Railroad","Mountain"],
+    a: "Deep Purple"
+  },
+  {
+    cat: "intl",
+    q: "¿Quién cantaba 'Space Oddity', el clásico que volvió a escucharse en los 70s?",
+    opts: ["Alice Cooper","Lou Reed","David Bowie","Iggy Pop","Brian Eno"],
+    a: "David Bowie"
+  },
+  {
+    cat: "intl",
+    q: "'Born to Run' de 1975 fue el gran salto al estrellato de...",
+    opts: ["Tom Petty","Bob Seger","Bruce Springsteen","John Mellencamp","Billy Joel"],
+    a: "Bruce Springsteen"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué banda publicó 'Rumours', el álbum más vendido de 1977?",
+    opts: ["ABBA","Supertramp","Electric Light Orchestra","Fleetwood Mac","Steely Dan"],
+    a: "Fleetwood Mac"
+  },
+  {
+    cat: "intl",
+    q: "¿Quién compuso e interpretó 'Imagine' en 1971?",
+    opts: ["Paul McCartney","George Harrison","Mick Jagger","John Lennon","Bob Dylan"],
+    a: "John Lennon"
+  },
+  {
+    cat: "intl",
+    q: "'Dream On' fue el primer hit de Aerosmith. ¿En qué año?",
+    opts: ["1970","1974","1972","1976","1978"],
+    a: "1973"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué banda sudafricana-británica lanzó 'Baker Street' en 1978?",
+    opts: ["10cc","Gerry Rafferty","Supertramp","Toto","Pablo Cruise"],
+    a: "Gerry Rafferty"
+  },
+  {
+    cat: "intl",
+    q: "'Don't Stop Me Now' es de Queen. ¿En qué álbum apareció (1978)?",
+    opts: ["A Night at the Opera","News of the World","Sheer Heart Attack","Jazz","The Game"],
+    a: "Jazz"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué banda publicó el álbum progresivo 'The Dark Side of the Moon' en 1973?",
+    opts: ["Genesis","Yes","Emerson Lake & Palmer","King Crimson","Pink Floyd"],
+    a: "Pink Floyd"
+  },
+  {
+    cat: "intl",
+    q: "'Go Your Own Way' y 'The Chain' son temas del álbum 'Rumours'. ¿De qué año es?",
+    opts: ["1974","1975","1976","1977","1978"],
+    a: "1977"
+  },
+  {
+    cat: "intl",
+    q: "¿Quién cantaba 'American Pie', el épico tema de más de 8 minutos?",
+    opts: ["Neil Young","James Taylor","Don McLean","Jackson Browne","Harry Chapin"],
+    a: "Don McLean"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué cantante lanzó 'Jolene' y 'I Will Always Love You' en 1973?",
+    opts: ["Linda Ronstadt","Crystal Gayle","Tammy Wynette","Dolly Parton","Emmylou Harris"],
+    a: "Dolly Parton"
+  },
+  {
+    cat: "intl",
+    q: "AC/DC lanzó 'Highway to Hell' en 1979. ¿Quién era el vocalista en ese entonces?",
+    opts: ["Brian Johnson","Rob Bailey","Dave Evans","Bon Scott","Mark Evans"],
+    a: "Bon Scott"
+  },
+  {
+    cat: "intl",
+    q: "'Bat Out of Hell' de 1977 fue el álbum debut de...",
+    opts: ["Alice Cooper","Meat Loaf","Ted Nugent","Peter Gabriel","Jim Steinman"],
+    a: "Meat Loaf"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué banda publicó el himno 'We Are the Champions' en 1977?",
+    opts: ["Foreigner","Journey","Queen","Boston","Heart"],
+    a: "Queen"
+  },
+  {
+    cat: "intl",
+    q: "'More Than a Feeling' fue el debut en Billboard de esta banda de Boston. ¿Su nombre?",
+    opts: ["Kansas","REO Speedwagon","Styx","Boston","Toto"],
+    a: "Boston"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué disco de The Who es una ópera rock de 1973 sobre un personaje llamado Quadrophenia?",
+    opts: ["Tommy","Who's Next","Meaty Beaty","Quadrophenia","Lifehouse"],
+    a: "Quadrophenia"
+  },
+  {
+    cat: "intl",
+    q: "'Walk This Way' de Aerosmith salió en 1975 y fue producida por...",
+    opts: ["Bob Ezrin","Jack Douglas","Rick Rubin","Tom Dowd","Eddie Kramer"],
+    a: "Jack Douglas"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué grupo sueco dominó Billboard con 'Dancing Queen' en 1976?",
+    opts: ["10cc","Boney M","Roxette","ABBA","Ace of Base"],
+    a: "ABBA"
+  },
+  {
+    cat: "intl",
+    q: "'Whole Lotta Love' es de Led Zeppelin. ¿En qué álbum apareció en 1969/70?",
+    opts: ["Led Zeppelin I","Houses of the Holy","Physical Graffiti","Led Zeppelin II","Led Zeppelin III"],
+    a: "Led Zeppelin II"
+  },
+  {
+    cat: "intl",
+    q: "¿Quién tocaba la guitarra slide en 'All Along the Watchtower' de Jimi Hendrix?",
+    opts: ["Keith Richards","Eric Clapton","Duane Allman","El mismo Hendrix","Jeff Beck"],
+    a: "El mismo Hendrix"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué canción de Lynyrd Skynyrd dura más de 9 minutos y tiene tres guitarristas?",
+    opts: ["Tuesday's Gone","Sweet Home Alabama","The Needle and the Spoon","Freebird","Simple Man"],
+    a: "Freebird"
+  },
+  {
+    cat: "intl",
+    q: "'Ziggy Stardust' fue un personaje creado por David Bowie en...",
+    opts: ["1970","1971","1972","1973","1974"],
+    a: "1972"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué canción de Bob Marley salió en el álbum 'Exodus' de 1977?",
+    opts: ["No Woman No Cry","Get Up Stand Up","One Love","Three Little Birds","Jamming"],
+    a: "Three Little Birds"
+  },
+  // ROCK ARGENTINO
+  {
+    cat: "arg",
+    q: "¿Qué banda argentina grabó el clásico 'Hombre de Mala Sangre' en los 70s?",
+    opts: ["Vox Dei","Almendra","Sui Generis","Pappo's Blues","La Pesada"],
+    a: "Pappo's Blues"
+  },
+  {
+    cat: "arg",
+    q: "¿En qué canción de Sui Generis está la frase 'Mariana es mejor que ayer'? (álbum Vida, 1972)",
+    opts: ["Rasguña las Piedras","Mariel","Bienvenidos al Tren","Canción para mi Muerte","Pequeñas Delicias"],
+    a: "Mariel"
+  },
+  {
+    cat: "arg",
+    q: "¿Quién compuso y cantó 'Canción para mi Muerte' en el álbum debut de Sui Generis (1972)?",
+    opts: ["Nito Mestre","Charly García","David Lebón","Claudio Gabis","Gustavo Santaolalla"],
+    a: "Charly García"
+  },
+  {
+    cat: "arg",
+    q: "'La Biblia' (1971) es el álbum concepto de una banda argentina. ¿Cuál?",
+    opts: ["Almendra","La Pesada del Rock and Roll","Sui Generis","Vox Dei","Arco Iris"],
+    a: "Vox Dei"
+  },
+  {
+    cat: "arg",
+    q: "¿Qué bajista y cantante era el líder de Pappo's Blues?",
+    opts: ["David Lebón","Luis Alberto Spinetta","Norberto 'Pappo' Napolitano","Billy Bond","Miguel Abuelo"],
+    a: "Norberto 'Pappo' Napolitano"
+  },
+  {
+    cat: "arg",
+    q: "¿En qué álbum de Almendra apareció 'Muchacha (Ojos de Papel)' en 1970?",
+    opts: ["El Jardín de los Presentes","Spinetta Jade","Almendra I","Kamikaze","Artaud"],
+    a: "Almendra I"
+  },
+  {
+    cat: "arg",
+    q: "¿Quién era el líder y guitarrista de Almendra, la banda que definió el rock argentino a inicios de los 70s?",
+    opts: ["Charly García","Pappo","Gustavo Santaolalla","Luis Alberto Spinetta","Miguel Abuelo"],
+    a: "Luis Alberto Spinetta"
+  },
+  {
+    cat: "arg",
+    q: "'Artaud' (1973) es considerado el mejor álbum del rock argentino. ¿Quién lo grabó?",
+    opts: ["Sui Generis","Invisible","Pescado Rabioso","Almendra","Serú Girán"],
+    a: "Pescado Rabioso"
+  },
+  {
+    cat: "arg",
+    q: "¿En qué año se formó Serú Girán, la súper banda con Charly García y David Lebón?",
+    opts: ["1974","1976","1978","1979","1980"],
+    a: "1978"
+  },
+  {
+    cat: "arg",
+    q: "¿Qué banda liderada por Miguel Abuelo tenía un sonido más psicodélico y experimental en los 70s?",
+    opts: ["La Pesada","Arco Iris","Los Gatos","El Reloj","Los Abuelos de la Nada"],
+    a: "Los Abuelos de la Nada"
+  },
+  {
+    cat: "arg",
+    q: "'Rasguña las Piedras' es uno de los temas más conocidos de Sui Generis y habla sobre...",
+    opts: ["Una historia de amor","La dictadura y la represión","Un viaje psicodélico","La amistad","La muerte de un amigo"],
+    a: "La dictadura y la represión"
+  },
+  {
+    cat: "arg",
+    q: "¿Qué banda argentina publicó el álbum 'El Jardín de los Presentes' en 1976?",
+    opts: ["Vox Dei","Arco Iris","La Pesada","Invisible","Serú Girán"],
+    a: "Invisible"
+  },
+  {
+    cat: "arg",
+    q: "'Noche de Bodas' y 'El Tren de las 16' son temas de Billy Bond y...",
+    opts: ["Los Gatos","La Pesada del Rock and Roll","Vox Dei","Almendra","Los Abuelos de la Nada"],
+    a: "La Pesada del Rock and Roll"
+  },
+  {
+    cat: "arg",
+    q: "¿Qué guitarrista argentino tocó en Pappo's Blues y luego en La Pesada?",
+    opts: ["David Lebón","Claudio Gabis","Lito Epumer","Gustavo Moretto","Billy Bond"],
+    a: "Claudio Gabis"
+  },
+  {
+    cat: "arg",
+    q: "El álbum 'Pequeñas Anécdotas sobre las Instituciones' (1974) es de Sui Generis. ¿Qué estilo tiene?",
+    opts: ["Blues puro","Folk rock político","Hard rock","Jazz fusión","Punk"],
+    a: "Folk rock político"
+  },
+  {
+    cat: "arg",
+    q: "¿Qué banda argentina incluía a Gustavo Santaolalla en los 70s?",
+    opts: ["Invisible","Arco Iris","Pappo's Blues","La Joven Guardia","Sui Generis"],
+    a: "Arco Iris"
+  },
+  // LATINOAMÉRICA
+  {
+    cat: "latam",
+    q: "¿Qué banda de rock chilena lanzó 'Luchín' en 1973 y fue censurada por Pinochet?",
+    opts: ["Los Jaivas","Quilapayún","Congreso","Inti-Illimani","Los Blops"],
+    a: "Los Jaivas"
+  },
+  {
+    cat: "latam",
+    q: "¿Qué grupo venezolano fue pionero del rock en español en los 70s con 'Hoy Soñé'?",
+    opts: ["Aditus","El Tren","Vytas Brenner","Témpano","Un, Dos, Tres y Fuera"],
+    a: "Aditus"
+  },
+  {
+    cat: "latam",
+    q: "'El Gran Espíritu' es un álbum icónico de rock chileno de Los Jaivas. ¿De qué año?",
+    opts: ["1971","1973","1975","1978","1980"],
+    a: "1975"
+  },
+  {
+    cat: "latam",
+    q: "¿Qué banda de rock brasileña fue popular en los 70s con 'Hoje é o Primeiro Dia do Resto da Sua Vida'?",
+    opts: ["Os Mutantes","Raul Seixas","Secos e Molhados","Barão Vermelho","Titãs"],
+    a: "Secos e Molhados"
+  },
+  {
+    cat: "latam",
+    q: "Raul Seixas, el 'Elvis brasileño', lanzó 'Metamorfose Ambulante' en...",
+    opts: ["1970","1971","1972","1973","1975"],
+    a: "1973"
+  },
+  {
+    cat: "latam",
+    q: "¿Qué artista peruano es considerado pionero del rock latinoamericano con 'Color de Hormiga'?",
+    opts: ["Traffic Sound","We All Together","Laghonia","El Polen","Telegraph Avenue"],
+    a: "Traffic Sound"
+  },
+  {
+    cat: "latam",
+    q: "Os Mutantes era la banda más psicodélica de Brasil en los 70s. ¿De qué ciudad eran?",
+    opts: ["Rio de Janeiro","Belo Horizonte","Salvador","São Paulo","Porto Alegre"],
+    a: "São Paulo"
+  },
+  {
+    cat: "latam",
+    q: "¿Qué banda colombiana del rock era conocida como 'Los Yetis' en los 70s?",
+    opts: ["Génesis","Siglo Cero","Tinta Blanca","Los Yetis","Fruko y sus Tesos"],
+    a: "Los Yetis"
+  },
+  {
+    cat: "latam",
+    q: "'Altiplano' de Los Jaivas de Chile evoca la música andina fusionada con rock. ¿En qué álbum está?",
+    opts: ["La Ventana","Alturas de Macchu Picchu","Obras de Violeta Parra","Palomita Blanca","Todos Juntos"],
+    a: "Alturas de Macchu Picchu"
+  },
+  {
+    cat: "latam",
+    q: "¿Qué vocalista uruguayo era conocido como 'el Mick Jagger uruguayo' en los 70s con su banda Psiglo?",
+    opts: ["Eduardo Mateo","Jaime Roos","Rubén Rada","Fernando Cabrera","Jorge Bonaldi"],
+    a: "Rubén Rada"
+  },
+  // MÁS INTERNACIONALES
+  {
+    cat: "intl",
+    q: "'Heart of Gold' es el hit más grande de Neil Young. ¿En qué álbum de 1972 está?",
+    opts: ["Harvest","After the Gold Rush","Tonight's the Night","Rust Never Sleeps","On the Beach"],
+    a: "Harvest"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué banda publicó el disco 'Never Mind the Bollocks' en 1977 e inventó el punk?",
+    opts: ["The Clash","The Ramones","The Damned","Sex Pistols","Buzzcocks"],
+    a: "Sex Pistols"
+  },
+  {
+    cat: "intl",
+    q: "'Angie' fue un hit de los Rolling Stones en 1973. ¿En qué álbum está?",
+    opts: ["Exile on Main St.","Let It Bleed","Goats Head Soup","Some Girls","Black and Blue"],
+    a: "Goats Head Soup"
+  },
+  {
+    cat: "intl",
+    q: "¿Quién cantaba 'Roxanne' en 1978, antes de su álbum debut con The Police?",
+    opts: ["Joe Jackson","Elvis Costello","Sting","Graham Parker","Nick Lowe"],
+    a: "Sting"
+  },
+  {
+    cat: "intl",
+    q: "¿En qué año lanzó Led Zeppelin su último álbum de estudio 'In Through the Out Door'?",
+    opts: ["1976","1977","1978","1979","1980"],
+    a: "1979"
+  },
+  {
+    cat: "intl",
+    q: "'Paranoid' de Black Sabbath salió en 1970. ¿Quién era el vocalista?",
+    opts: ["Ronnie James Dio","Rob Halford","Ian Gillan","Ozzy Osbourne","Glenn Hughes"],
+    a: "Ozzy Osbourne"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué guitarrista de los 70s era conocido como 'Slowhand'?",
+    opts: ["Jimmy Page","Jeff Beck","Eric Clapton","Carlos Santana","Peter Green"],
+    a: "Eric Clapton"
+  },
+  {
+    cat: "intl",
+    q: "'Wish You Were Here' de Pink Floyd fue dedicado a un ex miembro. ¿A quién?",
+    opts: ["Richard Wright","Roger Waters","Nick Mason","Syd Barrett","David Gilmour"],
+    a: "Syd Barrett"
+  },
+  {
+    cat: "intl",
+    q: "¿Qué disco de 1973 es el último álbum de rock clásico de los Beatles... aunque ya estaban separados?",
+    opts: ["Let It Be","Abbey Road","Live and Let Die","Band on the Run","Red Rose Speedway"],
+    a: "Band on the Run"
+  },
+  {
+    cat: "intl",
+    q: "'Life on Mars?' es una canción de David Bowie del álbum Hunky Dory. ¿De qué año?",
+    opts: ["1970","1971","1972","1973","1974"],
+    a: "1971"
+  },
+  {
+    cat: "arg",
+    q: "¿Qué tema de Spinetta incluye la frase 'Seguir Viviendo Sin Tu Amor'?",
+    opts: ["Muchacha Ojos de Papel","Barro Tal Vez","Seguir Viviendo Sin Tu Amor","Cantata de Puentes Amarillos","Por"],
+    a: "Seguir Viviendo Sin Tu Amor"
+  },
+  {
+    cat: "arg",
+    q: "El álbum 'Vida' de Sui Generis (1972) fue grabado casi en solitario. ¿Quiénes eran el dúo?",
+    opts: ["Charly García y Pappo","Charly García y Nito Mestre","Spinetta y Lebón","Miguel Abuelo y Lebón","Pappo y Lebón"],
+    a: "Charly García y Nito Mestre"
+  },
+];
+
+// ===========================
+// GAME STATE
+// ===========================
+let score = 0;
+let round = 0;
+let currentQ = null;
+let attempts = 0;
+let answered = false;
+let shuffledQuestions = [];
+let qIndex = 0;
+
+function shuffle(arr) {
+  let a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startGame() {
+  score = 0;
+  round = 0;
+  qIndex = 0;
+  shuffledQuestions = shuffle(ALL_QUESTIONS);
+  
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('win-screen').style.display = 'none';
+  document.getElementById('game-screen').classList.remove('hidden');
+  
+  loadQuestion();
+}
+
+function loadQuestion() {
+  if (qIndex >= shuffledQuestions.length) {
+    shuffledQuestions = shuffle(ALL_QUESTIONS);
+    qIndex = 0;
+  }
+
+  currentQ = shuffledQuestions[qIndex];
+  qIndex++;
+  round++;
+  attempts = 0;
+  answered = false;
+
+  // Update UI basics
+  document.getElementById('score-display').textContent = score;
+  document.getElementById('round-display').textContent = round;
+  document.getElementById('progress-fill').style.width = Math.min(100, (score / 50) * 100) + '%';
+  document.getElementById('q-num').textContent = round;
+
+  // Category label
+  const catEl = document.getElementById('cat-label');
+  if (currentQ.cat === 'arg') {
+    catEl.className = 'category-tag cat-arg';
+    catEl.textContent = '🇦🇷 ROCK ARGENTINO';
+  } else if (currentQ.cat === 'latam') {
+    catEl.className = 'category-tag cat-latam';
+    catEl.textContent = '🌎 ROCK LATINOAMERICANO';
+  } else {
+    catEl.className = 'category-tag cat-intl';
+    catEl.textContent = '🌍 ROCK INTERNACIONAL';
+  }
+
+  document.getElementById('question-text').textContent = currentQ.q;
+
+  // Reset attempt dots
+  document.getElementById('dot1').className = 'attempt-dot';
+  document.getElementById('dot2').className = 'attempt-dot';
+
+  // Reset feedback
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+
+  // Reset next btn
+  document.getElementById('next-btn').className = 'next-btn';
+
+  // Render options (shuffled)
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  const opts = shuffle(currentQ.opts);
+  const letters = ['A','B','C','D','E'];
+  opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.id = 'opt-' + i;
+    btn.dataset.val = opt;
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => handleAnswer(opt, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function handleAnswer(chosen, btn) {
+  if (answered) return;
+
+  const isCorrect = chosen === currentQ.a;
+
+  if (isCorrect) {
+    answered = true;
+    btn.classList.add('correct');
+    disableAll();
+
+    const pts = attempts === 0 ? 3 : 1;
+    score += pts;
+
+    const fb = document.getElementById('feedback');
+    if (pts === 3) {
+      fb.className = 'feedback good show';
+      fb.innerHTML = `🎸 ¡Correcto al primer intento! <span class="pts-badge">+3 PTS</span>`;
+    } else {
+      fb.className = 'feedback good show';
+      fb.innerHTML = `✅ ¡Correcto en el segundo intento! <span class="pts-badge">+1 PTO</span>`;
+    }
+
+    document.getElementById('score-display').textContent = score;
+    document.getElementById('progress-fill').style.width = Math.min(100, (score / 50) * 100) + '%';
+    document.getElementById('next-btn').className = 'next-btn show';
+
+    if (score >= 50) {
+      setTimeout(showWin, 1200);
+    }
+
+  } else {
+    attempts++;
+    btn.classList.add('wrong');
+    btn.disabled = true;
+
+    if (attempts === 1) {
+      document.getElementById('dot1').classList.add('used');
+      const fb = document.getElementById('feedback');
+      fb.className = 'feedback bad show';
+      fb.innerHTML = `❌ Incorrecto. ¡Todavía tenés un intento! <span class="pts-badge">1 PTO posible</span>`;
+    } else {
+      document.getElementById('dot2').classList.add('used');
+      answered = true;
+      disableAll();
+      revealCorrect();
+      const fb = document.getElementById('feedback');
+      fb.className = 'feedback neutral show';
+      fb.innerHTML = `😔 La respuesta era: <strong>${currentQ.a}</strong> — <span class="pts-badge">0 PTS</span>`;
+      document.getElementById('next-btn').className = 'next-btn show';
+    }
+  }
+}
+
+function disableAll() {
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach(b => { if (!b.disabled) b.disabled = true; });
+}
+
+function revealCorrect() {
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach(b => {
+    if (b.dataset.val === currentQ.a) {
+      b.classList.add('reveal');
+    }
+  });
+}
+
+function nextQuestion() {
+  if (score >= 50) {
+    showWin();
+    return;
+  }
+  loadQuestion();
+}
+
+function showWin() {
+  document.getElementById('game-screen').classList.add('hidden');
+  const ws = document.getElementById('win-screen');
+  ws.style.display = 'block';
+  document.getElementById('final-score').textContent = score;
+
+  let msg = '';
+  if (score >= 70) msg = '¡Sos una leyenda viva del rock! Conocés cada riff y cada letra de los 70s. 🎸';
+  else if (score >= 55) msg = '¡Excelente! Claramente viviste los 70s en la radio o en los discos de vinilo. 🎵';
+  else msg = '¡Lo lograste! Llegaste a los 50 puntos. El rock de los 70s corre por tus venas. 🤘';
+
+  document.getElementById('win-msg').textContent = msg;
+}
+</script>
+</body>
+</html>
